@@ -1,11 +1,66 @@
-moçoooootaaaaaa
 
-<div id="url-atual"></div>
+<div id="resultado"></div>
 
 <script>
-  // Captura a URL atual
-  const url = window.location.href;
+  // Array de correspondências
+  const links = {
+    "inicio": "https://www.cacapava.sp.gov.br/parque-da-mocota",
+    "mesas": "https://www.cacapava.sp.gov.br/FAQ-parque-da-mocota"
+  };
 
-  // Exibe a URL na página
-  document.getElementById("url-atual").textContent = url;
+  // Captura a variável GET
+  const parametros = new URLSearchParams(window.location.search);
+  const variavel = parametros.get("url");
+
+  // Busca o destino
+  const destino = links[variavel];
+
+  const resultado = document.getElementById("resultado");
+
+  if (destino) {
+
+    let contador = 10;
+
+    resultado.innerHTML = `
+      <div style="text-align:center; padding:30px; font-family:Arial;">
+        <h2>Redirecionamento</h2>
+        <p>Você será redirecionado para:</p>
+        <p><strong>${destino}</strong></p>
+
+        <div id="contador"
+          style="font-size:50px; font-weight:bold; margin:20px;">
+          ${contador}
+        </div>
+
+        <p>Segundos para o redirecionamento...</p>
+      </div>
+    `;
+
+    const intervalo = setInterval(() => {
+      contador--;
+
+      document.getElementById("contador").textContent = contador;
+
+      if (contador <= 0) {
+        clearInterval(intervalo);
+
+        // Redirecionamento em nova aba
+        window.open(destino, "_self");
+        
+        document.getElementById("contador").textContent = "✓";
+        document.getElementById("resultado")
+          .insertAdjacentHTML("beforeend",
+          "<p style='text-align:center;'>Redirecionamento iniciado!</p>");
+      }
+
+    }, 1000);
+
+  } else {
+    resultado.innerHTML = `
+      <div style="text-align:center; font-family:Arial;">
+        <h2>Link não encontrado</h2>
+        <p>Verifique o endereço informado.</p>
+      </div>
+    `;
+  }
 </script>
